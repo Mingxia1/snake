@@ -5,6 +5,8 @@
 #include <QPen>
 #include <QPainterPath>
 #include <QColor>
+#include <QColormap>
+#include <QImage>
 #define LEFT 1
 #define RIGHT 2
 #define PI 3.1416
@@ -32,6 +34,8 @@ public:
     QPainterPath getPath();
     void snakeMove();
     void setColor(QColor);
+    void ifHitBody(const QImage &);
+    void ifHitBorder(int, int);
 
 private:
     QPen snake_style, snake_dis_style;
@@ -48,6 +52,8 @@ public slots:
     void rotateLeft();
 
 signals:
+    void hitBody();
+    void hitBorder();
 };
 
 #endif // SNAKE_H

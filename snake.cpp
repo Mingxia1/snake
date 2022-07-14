@@ -21,10 +21,10 @@ void snake::init(double x, double y)
     startPos.setX(x);
     startPos.setY(y);
     endPos = startPos;
-    speed = 0.3;
+    speed = 0.5;
     angle = 0;
-    angleSpeed = 0.5;
-    length = 100;
+    angleSpeed = 1.5;
+    length = 250;
 }
 
 QPen snake::getStyle(int a)
@@ -121,15 +121,10 @@ void snake::setPath() //目前无用
 QPainterPath snake::getPath()
 {
     snake_path.clear();
-    QList<QPainterPath>::const_iterator i = snake_path_list.end();
-    i--;
-    for (; snake_path.length() <= length && i != snake_path_list.begin(); i--)
+    QList<QPainterPath>::const_iterator i = snake_path_list.begin();
+    for (; i != snake_path_list.end(); i++)
     {
         snake_path.addPath(*i);
-    }
-    for (; i != snake_path_list.begin();)
-    {
-        snake_path_list.removeFirst();
     }
     return snake_path;
 }
@@ -141,10 +136,35 @@ void snake::snakeMove()
     QPainterPath tempPath;
     tempPath.moveTo(startPos);
     tempPath.lineTo(endPos);
-    snake_path_list << tempPath;
+    if (snake_path.length() == length)
+    {
+        snake_path_list << tempPath;
+        snake_path_list.removeFirst();
+    }
+    else if (snake_path.length() < length)
+        snake_path_list << tempPath;
+    else if (snake_path.length() > length)
+    {
+        snake_path_list.removeFirst();
+    }
 }
 
 void snake::setColor(QColor a)
 {
     snake_style.setColor(a);
+}
+
+void snake::ifHitBody(const QImage &pix)
+{
+    int x = endPos.x();
+    int y = endPos.y();
+    QColor color = pix.pixelColor(x + cos(angle * PI / 180) * 7, y - sin(angle * PI / 180) * 7);
+    if (color == Qt::black)
+        emit hitBody();
+}
+
+void snake::ifHitBorder(int width, int height)
+{
+    if (endPos.x() <= 15 || endPos.x() >= width - 15 || endPos.y() <= 15 || endPos.y() >= height - 15)
+        emit hitBorder();
 }

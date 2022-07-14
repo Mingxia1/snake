@@ -19,7 +19,6 @@ public:
     void init(snake *);
     void drawPix();
     QPointF getCentre();
-    void ifHitBorder();
 
 private:
     QPixmap *pix;

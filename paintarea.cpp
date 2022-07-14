@@ -73,10 +73,11 @@ void PaintArea::init(snake *snake)
 void PaintArea::moveEvent()
 {
     playerSnake->snakeMove();
+    playerSnake->ifHitBody(pix->toImage());
     drawPix();
     update();
 
-    ifHitBorder();
+    playerSnake->ifHitBorder(width(), height());
 }
 
 QPointF PaintArea::getCentre() //目前无用
@@ -85,11 +86,4 @@ QPointF PaintArea::getCentre() //目前无用
     tempPos.setX(width() / 2);
     tempPos.setY(height() / 2);
     return tempPos;
-}
-
-void PaintArea::ifHitBorder()
-{
-    QPointF tempPos(playerSnake->getEndPos());
-    if (tempPos.x() <= 15 || tempPos.x() >= width() - 15 || tempPos.y() <= 15 || tempPos.y() >= height() - 15)
-        emit hitBorder();
 }
