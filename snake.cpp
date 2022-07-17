@@ -118,13 +118,13 @@ QPainterPath snake::getPath()
 {
     snake_path.clear();
     if (cos(ANGLE) > 0 && sin(ANGLE) > 0)
-        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE) - 5, 2, 2);
+        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE) - 5, 0.5, 0.5);
     else if (cos(ANGLE) < 0 && sin(ANGLE) > 0)
-        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE) - 5, 2, 2);
+        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE) - 5, 0.5, 0.5);
     else if (cos(ANGLE) < 0 && sin(ANGLE) < 0)
-        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE), 2, 2);
+        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE), 0.5, 0.5);
     else if (cos(ANGLE) > 0 && sin(ANGLE) < 0)
-        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE), 2, 2);
+        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE), 0.5, 0.5);
     QList<QPainterPath>::const_iterator i = snake_path_list.cbegin();
     for (; i != snake_path_list.cend(); i++)
     {
