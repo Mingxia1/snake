@@ -48,11 +48,11 @@ void PaintArea::keyReleaseEvent(QKeyEvent *e)
 
 void PaintArea::drawPix()
 {
+    pix->fill(Qt::white);
     p->begin(pix);
-    p->setPen(playerSnake->getStyle(WHITE));
-    p->drawPath(last_path);
+    p->setPen(border_style);
+    p->drawPath(border);
     p->setPen(playerSnake->getStyle(BLACK));
-    last_path = playerSnake->getPath();
     p->drawPath(playerSnake->getPath());
     p->end();
     playerSnake->setStartPos(playerSnake->getEndPos());
@@ -73,7 +73,6 @@ void PaintArea::init(snake *snake)
 void PaintArea::moveEvent()
 {
     playerSnake->snakeMove();
-    playerSnake->ifHitBody(pix->toImage());
     drawPix();
     update();
 

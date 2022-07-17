@@ -34,7 +34,6 @@ public:
     QPainterPath getPath();
     void snakeMove();
     void setColor(QColor);
-    void ifHitBody(const QImage &);
     void ifHitBorder(int, int);
 
 private:
@@ -46,6 +45,7 @@ private:
     qreal length;
     QPainterPath snake_path;
     QList<QPainterPath> snake_path_list;
+    QRectF head;
 
 public slots:
     void rotateRight();

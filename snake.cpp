@@ -1,5 +1,6 @@
 #include "snake.h"
 #include <cmath>
+#define ANGLE angle *PI / 180
 
 snake::snake(QObject *parent)
     : QObject{parent}
@@ -95,11 +96,6 @@ void snake::rotate(int flag)
     }
 }
 
-qreal snake::getRadAngel() //目前无用
-{
-    return angle * PI / 180;
-}
-
 void snake::rotateRight()
 {
     rotate(RIGHT);
@@ -121,9 +117,19 @@ void snake::setPath() //目前无用
 QPainterPath snake::getPath()
 {
     snake_path.clear();
-    QList<QPainterPath>::const_iterator i = snake_path_list.begin();
-    for (; i != snake_path_list.end(); i++)
+    if (cos(ANGLE) > 0 && sin(ANGLE) > 0)
+        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE) - 5, 2, 2);
+    else if (cos(ANGLE) < 0 && sin(ANGLE) > 0)
+        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE) - 5, 2, 2);
+    else if (cos(ANGLE) < 0 && sin(ANGLE) < 0)
+        head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE), 2, 2);
+    else if (cos(ANGLE) > 0 && sin(ANGLE) < 0)
+        head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE), 2, 2);
+    QList<QPainterPath>::const_iterator i = snake_path_list.cbegin();
+    for (; i != snake_path_list.cend(); i++)
     {
+        if (i->intersects(head))
+            emit hitBody();
         snake_path.addPath(*i);
     }
     return snake_path;
@@ -131,8 +137,8 @@ QPainterPath snake::getPath()
 
 void snake::snakeMove()
 {
-    endPos.setX(startPos.x() + cos(angle * PI / 180) * speed);
-    endPos.setY(startPos.y() - sin(angle * PI / 180) * speed);
+    endPos.setX(startPos.x() + cos(ANGLE) * speed);
+    endPos.setY(startPos.y() - sin(ANGLE) * speed);
     QPainterPath tempPath;
     tempPath.moveTo(startPos);
     tempPath.lineTo(endPos);
@@ -140,9 +146,13 @@ void snake::snakeMove()
     {
         snake_path_list << tempPath;
         snake_path_list.removeFirst();
+        startPos = endPos;
     }
     else if (snake_path.length() < length)
+    {
         snake_path_list << tempPath;
+        startPos = endPos;
+    }
     else if (snake_path.length() > length)
     {
         snake_path_list.removeFirst();
@@ -152,15 +162,6 @@ void snake::snakeMove()
 void snake::setColor(QColor a)
 {
     snake_style.setColor(a);
-}
-
-void snake::ifHitBody(const QImage &pix)
-{
-    int x = endPos.x();
-    int y = endPos.y();
-    QColor color = pix.pixelColor(x + cos(angle * PI / 180) * 7, y - sin(angle * PI / 180) * 7);
-    if (color == Qt::black)
-        emit hitBody();
 }
 
 void snake::ifHitBorder(int width, int height)

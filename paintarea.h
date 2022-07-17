@@ -29,7 +29,6 @@ private:
     QTimer *rotate_right_timer;
     QTimer *rotate_left_timer;
     QPainterPath border;
-    QPainterPath last_path;
     QPen border_style;
 
 signals:
