@@ -1,7 +1,5 @@
 #include "widget.h"
 #include "./ui_widget.h"
-#include "paintarea.h"
-#include "ball.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), ui(new Ui::Widget)
@@ -19,11 +17,17 @@ void Widget::gameStart()
     ui->paintArea->init();
     connect(player_snake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
     connect(player_snake, SIGNAL(hitBody()), this, SLOT(gameOver()));
+    ball_count = 5;
+    ball_list = new QList<ball *>;
+    for (int i = 0; i < ball_count; i++)
+    {
+        ball *temp_ball = new ball(ui->paintArea->width(), ui->paintArea->height());
+        ball_list->append(temp_ball);
+    }
+
     QTimer *main_timer = new QTimer;
     main_timer->start(2);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
-
-    QList<ball> *ball_list = new QList<ball>;
 }
 
 void Widget::gameOver()

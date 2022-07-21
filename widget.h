@@ -5,6 +5,8 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include "snake.h"
+#include "paintarea.h"
+#include "ball.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -34,5 +36,7 @@ private:
     QPixmap *pix;
     QTimer *rotate_right_timer;
     QTimer *rotate_left_timer;
+    QList<ball *> *ball_list;
+    int ball_count;
 };
 #endif // WIDGET_H

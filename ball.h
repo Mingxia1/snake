@@ -3,13 +3,13 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QRandomGenerator>
 
 class ball : public QObject
 {
     Q_OBJECT
 public:
-    explicit ball(QObject *parent = nullptr);
-    void spawn();
+    explicit ball(qreal, qreal, QObject *parent = nullptr);
 
 private:
     qreal r;
