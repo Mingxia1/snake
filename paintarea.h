@@ -14,7 +14,6 @@ public:
     void paintEvent(QPaintEvent *);
     void init();
     void drawPix(QPixmap *, QPainterPath *, QPen);
-    QPointF getCentre();
     void moveEvent();
     void paint(QPixmap *);
 
