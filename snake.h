@@ -19,7 +19,7 @@ class snake : public QObject
 public:
     explicit snake(QObject *parent = nullptr);
     void init(double, double);
-    QPen getStyle(int);
+    QPen getStyle();
     QPointF getStartPos();
     QPointF getEndPos();
     void setStartPos(const QPointF &);
@@ -31,13 +31,12 @@ public:
     qreal getRadAngel();
     void rotate(int);
     void setPath();
-    QPainterPath getPath();
+    QPainterPath *getPath();
     void snakeMove();
     void setColor(QColor);
-    void ifHitBorder(int, int);
 
 private:
-    QPen snake_style, snake_dis_style;
+    QPen snake_style;
     QPointF startPos, endPos;
     qreal speed;
     qreal angle;
@@ -46,6 +45,7 @@ private:
     QPainterPath snake_path;
     QList<QPainterPath> snake_path_list;
     QRectF head;
+    qreal width, height;
 
 public slots:
     void rotateRight();

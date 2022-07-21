@@ -1,32 +1,71 @@
 #include "widget.h"
 #include "./ui_widget.h"
 #include "paintarea.h"
-#include "snake.h"
+#include "ball.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    snake *playerSnake = new snake;
-    playerSnake->init(ui->paintArea->width() / 2, ui->paintArea->height() / 2);
-    ui->paintArea->init(playerSnake);
-    connect(playerSnake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
-    connect(playerSnake, SIGNAL(hitBody()), this, SLOT(gameOver()));
+    setFocusPolicy(Qt::StrongFocus);
     gameStart();
 }
 
 void Widget::gameStart()
 {
-    QTimer *draw_timer = new QTimer;
-    draw_timer = new QTimer;
-    draw_timer->start(2);
-    // connect(ui->paintArea, SIGNAL(hitBorder()), this, SLOT(gameOver()));
-    connect(draw_timer, SIGNAL(timeout()), ui->paintArea, SLOT(moveEvent()));
+    pix = new QPixmap(ui->paintArea->size());
+    player_snake = new snake;
+    player_snake->init(ui->paintArea->width(), ui->paintArea->height());
+    ui->paintArea->init();
+    connect(player_snake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
+    connect(player_snake, SIGNAL(hitBody()), this, SLOT(gameOver()));
+    QTimer *main_timer = new QTimer;
+    main_timer->start(2);
+    connect(main_timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
+
+    QList<ball> *ball_list = new QList<ball>;
 }
 
 void Widget::gameOver()
 {
     exit(0);
+}
+
+void Widget::timerEvent()
+{
+    pix->fill(Qt::white);
+    player_snake->snakeMove();
+    ui->paintArea->drawPix(pix, player_snake->getPath(), player_snake->getStyle());
+
+    ui->paintArea->paint(pix);
+}
+
+void Widget::keyPressEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Right)
+    {
+        rotate_right_timer = new QTimer;
+        rotate_right_timer->start(1);
+        connect(rotate_right_timer, SIGNAL(timeout()), player_snake, SLOT(rotateRight()));
+    }
+    if (e->key() == Qt::Key_Left)
+    {
+        rotate_left_timer = new QTimer;
+        rotate_left_timer->start(1);
+        connect(rotate_left_timer, SIGNAL(timeout()), player_snake, SLOT(rotateLeft()));
+    }
+}
+
+void Widget::keyReleaseEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Right)
+    {
+        rotate_right_timer->stop();
+    }
+    if (e->key() == Qt::Key_Left)
+    {
+        rotate_left_timer->stop();
+    }
 }
 
 Widget::~Widget()

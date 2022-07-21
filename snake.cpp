@@ -10,30 +10,24 @@ snake::snake(QObject *parent)
     snake_style.setJoinStyle(Qt::RoundJoin);
     snake_style.setWidth(10);
     snake_style.setColor(Qt::black);
-    snake_dis_style.setStyle(Qt::SolidLine);
-    snake_dis_style.setCapStyle(Qt::RoundCap);
-    snake_dis_style.setJoinStyle(Qt::RoundJoin);
-    snake_dis_style.setWidth(10);
-    snake_dis_style.setColor(Qt::white);
 }
 
-void snake::init(double x, double y)
+void snake::init(double __width, double __height)
 {
-    startPos.setX(x);
-    startPos.setY(y);
+    width = __width;
+    height = __height;
+    startPos.setX(__width / 2);
+    startPos.setY(__height / 2);
     endPos = startPos;
     speed = 0.5;
     angle = 0;
     angleSpeed = 1.5;
-    length = 250;
+    length = 200;
 }
 
-QPen snake::getStyle(int a)
+QPen snake::getStyle()
 {
-    if (a == BLACK)
-        return snake_style;
-    else
-        return snake_dis_style;
+    return snake_style;
 }
 
 QPointF snake::getStartPos() //目前无用
@@ -114,7 +108,7 @@ void snake::setPath() //目前无用
     snake_path_list << tempPath;
 }
 
-QPainterPath snake::getPath()
+QPainterPath *snake::getPath()
 {
     snake_path.clear();
     if (cos(ANGLE) > 0 && sin(ANGLE) > 0)
@@ -132,7 +126,7 @@ QPainterPath snake::getPath()
             emit hitBody();
         snake_path.addPath(*i);
     }
-    return snake_path;
+    return &snake_path;
 }
 
 void snake::snakeMove()
@@ -157,15 +151,11 @@ void snake::snakeMove()
     {
         snake_path_list.removeFirst();
     }
+    if (endPos.x() <= 15 || endPos.x() >= width - 15 || endPos.y() <= 15 || endPos.y() >= height - 15)
+        emit hitBorder();
 }
 
 void snake::setColor(QColor a)
 {
     snake_style.setColor(a);
-}
-
-void snake::ifHitBorder(int width, int height)
-{
-    if (endPos.x() <= 15 || endPos.x() >= width - 15 || endPos.y() <= 15 || endPos.y() >= height - 15)
-        emit hitBorder();
 }

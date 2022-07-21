@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
         snake.cpp
         paintarea.h
         paintarea.cpp
+        ball.h
+        ball.cpp
 
 )
 
