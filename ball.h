@@ -4,16 +4,20 @@
 #include <QObject>
 #include <QPointF>
 #include <QRandomGenerator>
+#include <QPen>
 
 class ball : public QObject
 {
     Q_OBJECT
 public:
     explicit ball(qreal, qreal, QObject *parent = nullptr);
+    QPen getStyle();
+    QPointF getPos();
 
 private:
     qreal r;
     QPointF pos;
+    QPen ball_style;
 
 signals:
 };

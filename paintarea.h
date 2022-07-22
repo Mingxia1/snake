@@ -14,6 +14,7 @@ public:
     void paintEvent(QPaintEvent *);
     void init();
     void drawPix(QPixmap *, QPainterPath *, QPen);
+    void drawBall(QPixmap *, QPointF, QPen);
     void moveEvent();
     void paint(QPixmap *);
 

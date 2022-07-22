@@ -40,6 +40,11 @@ void Widget::timerEvent()
     pix->fill(Qt::white);
     player_snake->snakeMove();
     ui->paintArea->drawPix(pix, player_snake->getPath(), player_snake->getStyle());
+    QList<ball *>::const_iterator i = ball_list->cbegin();
+    for (auto i : *ball_list)
+    {
+        ui->paintArea->drawBall(pix, i->getPos(), i->getStyle());
+    }
 
     ui->paintArea->paint(pix);
 }

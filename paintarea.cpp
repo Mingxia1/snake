@@ -27,6 +27,14 @@ void PaintArea::drawPix(QPixmap *pix, QPainterPath *path, QPen pen)
     p->end();
 }
 
+void PaintArea::drawBall(QPixmap *pix, QPointF pos, QPen pen)
+{
+    p->begin(pix);
+    p->setPen(pen);
+    p->drawPoint(pos);
+    p->end();
+}
+
 void PaintArea::init()
 {
     p = new QPainter;
