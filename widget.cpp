@@ -17,7 +17,7 @@ void Widget::gameStart()
     ui->paintArea->init();
     connect(player_snake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
     connect(player_snake, SIGNAL(hitBody()), this, SLOT(gameOver()));
-    ball_count = 5;
+    ball_count = 5; //未来更新难度选项或者实时调整球的数量
     ball_list = new QList<ball *>;
     for (int i = 0; i < ball_count; i++)
     {
@@ -26,7 +26,7 @@ void Widget::gameStart()
     }
 
     QTimer *main_timer = new QTimer;
-    main_timer->start(2);
+    main_timer->start(3);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
 }
 
@@ -40,10 +40,24 @@ void Widget::timerEvent()
     pix->fill(Qt::white);
     player_snake->snakeMove();
     ui->paintArea->drawPix(pix, player_snake->getPath(), player_snake->getStyle());
-    QList<ball *>::const_iterator i = ball_list->cbegin();
-    for (auto i : *ball_list)
+    while (ball_list->count() < ball_count)
     {
-        ui->paintArea->drawBall(pix, i->getPos(), i->getStyle());
+        ball *temp_ball = new ball(ui->paintArea->width(), ui->paintArea->height());
+        ball_list->append(temp_ball);
+    }
+    QList<ball *>::iterator i = ball_list->begin();
+    for (; i != ball_list->end();)
+    {
+        if (((*i)->getPos().x() - player_snake->getEndPos().x()) * ((*i)->getPos().x() - player_snake->getEndPos().x()) + ((*i)->getPos().y() - player_snake->getEndPos().y()) * ((*i)->getPos().y() - player_snake->getEndPos().y()) <= 100)
+        {
+            player_snake->eatBall();
+            ball_list->erase(i);
+        }
+        else
+        {
+            ui->paintArea->drawBall(pix, (*i)->getPos(), (*i)->getStyle());
+            i++;
+        }
     }
 
     ui->paintArea->paint(pix);

@@ -19,9 +19,9 @@ void snake::init(double __width, double __height)
     startPos.setX(__width / 2);
     startPos.setY(__height / 2);
     endPos = startPos;
-    speed = 0.5;
+    speed = 0.7;
     angle = 0;
-    angleSpeed = 1.5;
+    angleSpeed = 1.0;
     length = 200;
 }
 
@@ -158,4 +158,9 @@ void snake::snakeMove()
 void snake::setColor(QColor a)
 {
     snake_style.setColor(a);
+}
+
+void snake::eatBall()
+{
+    length += 30;
 }

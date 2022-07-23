@@ -26,14 +26,15 @@ public:
     void setEndPos(const QPointF &);
     void setEndPosX(qreal);
     void setEndPosY(qreal);
+    void setPath();
+    void setColor(QColor);
     qreal getSpeed();
     qreal getAngleSpeed();
     qreal getRadAngel();
-    void rotate(int);
-    void setPath();
     QPainterPath *getPath();
+    void rotate(int);
     void snakeMove();
-    void setColor(QColor);
+    void eatBall();
 
 private:
     QPen snake_style;
