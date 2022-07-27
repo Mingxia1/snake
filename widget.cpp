@@ -5,44 +5,60 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    //初始化边界画笔
+    border_style.setWidth(20);
+    border_style.setColor(Qt::black);
+    border_style.setStyle(Qt::SolidLine);
+    //初始化按钮
+    game_start_button = new QPushButton("开始", this);
+    game_start_button->setGeometry(width() / 2, height() / 2, 100, 50);
+    connect(game_start_button, SIGNAL(clicked()), this, SLOT(gameStart()));
+    //初始化绘图画布
+    pix = new QPixmap(size());
+    pix->fill();
     setFocusPolicy(Qt::StrongFocus);
-    gameStart();
+    mainMenu();
+}
+
+void Widget::mainMenu()
+{
+    game_start_button->show();
 }
 
 void Widget::gameStart()
 {
-    pix = new QPixmap(ui->paintArea->size());
+    game_start_button->hide();
     player_snake = new snake;
-    player_snake->init(ui->paintArea->width(), ui->paintArea->height());
-    ui->paintArea->init();
+    player_snake->init(width(), height());
+    border.addRect(rect());
     connect(player_snake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
     connect(player_snake, SIGNAL(hitBody()), this, SLOT(gameOver()));
     ball_count = 5; //未来更新难度选项或者实时调整球的数量
     ball_list = new QList<ball *>;
     for (int i = 0; i < ball_count; i++)
     {
-        ball *temp_ball = new ball(ui->paintArea->width(), ui->paintArea->height());
+        ball *temp_ball = new ball(width(), height());
         ball_list->append(temp_ball);
     }
-
-    QTimer *main_timer = new QTimer;
+    main_timer = new QTimer;
     main_timer->start(3);
     connect(main_timer, SIGNAL(timeout()), this, SLOT(timerEvent()));
 }
 
 void Widget::gameOver()
 {
-    exit(0);
+    main_timer->~QTimer();
+    mainMenu();
 }
 
 void Widget::timerEvent()
 {
     pix->fill(Qt::white);
     player_snake->snakeMove();
-    ui->paintArea->drawPix(pix, player_snake->getPath(), player_snake->getStyle());
+    drawSnake();
     while (ball_list->count() < ball_count)
     {
-        ball *temp_ball = new ball(ui->paintArea->width(), ui->paintArea->height());
+        ball *temp_ball = new ball(width(), height());
         ball_list->append(temp_ball);
     }
     QList<ball *>::iterator i = ball_list->begin();
@@ -51,16 +67,15 @@ void Widget::timerEvent()
         if (((*i)->getPos().x() - player_snake->getEndPos().x()) * ((*i)->getPos().x() - player_snake->getEndPos().x()) + ((*i)->getPos().y() - player_snake->getEndPos().y()) * ((*i)->getPos().y() - player_snake->getEndPos().y()) <= 100)
         {
             player_snake->eatBall();
-            ball_list->erase(i);
+            i = ball_list->erase(i);
         }
         else
         {
-            ui->paintArea->drawBall(pix, (*i)->getPos(), (*i)->getStyle());
+            drawBall((*i)->getPos(), (*i)->getStyle());
             i++;
         }
     }
-
-    ui->paintArea->paint(pix);
+    update();
 }
 
 void Widget::keyPressEvent(QKeyEvent *e)
@@ -89,6 +104,32 @@ void Widget::keyReleaseEvent(QKeyEvent *e)
     {
         rotate_left_timer->stop();
     }
+}
+
+void Widget::drawBall(QPointF pos, QPen pen)
+{
+    QPainter *p = new QPainter;
+    p->begin(pix);
+    p->setPen(pen);
+    p->drawPoint(pos);
+    p->end();
+}
+
+void Widget::drawSnake()
+{
+    QPainter *p = new QPainter;
+    p->begin(pix);
+    p->setPen(border_style);
+    p->drawPath(border);
+    p->setPen(player_snake->getStyle());
+    p->drawPath(*(player_snake->getPath()));
+    p->end();
+}
+
+void Widget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.drawPixmap(QPoint(0, 0), *pix);
 }
 
 Widget::~Widget()

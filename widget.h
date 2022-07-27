@@ -4,8 +4,9 @@
 #include <QWidget>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QPushButton>
+#include <QPainter>
 #include "snake.h"
-#include "paintarea.h"
 #include "ball.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,11 +25,15 @@ public:
     ~Widget();
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);
-    void gameStart();
+    void drawBall(QPointF, QPen);
+    void drawSnake();
+    void paintEvent(QPaintEvent *);
+    void mainMenu();
 
 public slots:
     void gameOver();
     void timerEvent();
+    void gameStart();
 
 private:
     Ui::Widget *ui;
@@ -36,7 +41,11 @@ private:
     QPixmap *pix;
     QTimer *rotate_right_timer;
     QTimer *rotate_left_timer;
+    QTimer *main_timer;
     QList<ball *> *ball_list;
+    QPainterPath border;
+    QPen border_style;
+    QPushButton *game_start_button;
     int ball_count;
 };
 #endif // WIDGET_H

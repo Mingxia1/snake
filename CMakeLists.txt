@@ -21,8 +21,6 @@ set(PROJECT_SOURCES
         widget.ui
         snake.h
         snake.cpp
-        paintarea.h
-        paintarea.cpp
         ball.h
         ball.cpp
 
