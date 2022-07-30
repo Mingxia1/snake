@@ -4,6 +4,14 @@
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    //为了符合静态代码检查规则的空初始化
+    player_snake = nullptr;
+    rotate_left_timer = nullptr;
+    rotate_right_timer = nullptr;
+    main_timer = nullptr;
+    ball_list = nullptr;
+    ball_count = 0;
+    score = 0;
     //初始化画笔
     border_style.setWidth(20);
     border_style.setColor(Qt::black);
@@ -21,17 +29,17 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     main_menu = new QLabel(this);
     main_menu->setGeometry(0, 0, 800, 650);
     main_menu->hide();
-    QPushButton *game_start_button = new QPushButton("开始", main_menu);
+    auto *game_start_button = new QPushButton("开始", main_menu);
     game_start_button->setGeometry(main_menu->width() / 2, main_menu->height() / 2, 100, 50);
     connect(game_start_button, SIGNAL(clicked()), this, SLOT(gameStart()));
     //初始化游戏结束菜单label
     game_over_menu = new QLabel(this);
     game_over_menu->setGeometry(0, 0, 800, 650);
     game_over_menu->hide();
-    QPushButton *restart_button = new QPushButton("restart", game_over_menu);
+    auto *restart_button = new QPushButton("restart", game_over_menu);
     restart_button->setGeometry(pix->width() / 2, pix->height() / 2, 100, 50);
     connect(restart_button, SIGNAL(clicked()), this, SLOT(gameStart()));
-    QPushButton *main_menu_button = new QPushButton("主菜单", game_over_menu);
+    auto *main_menu_button = new QPushButton("主菜单", game_over_menu);
     main_menu_button->setGeometry(pix->width() / 2, pix->height() / 2 + 55, 100, 50);
     connect(main_menu_button, SIGNAL(clicked()), this, SLOT(mainMenu()));
     //其他初始化
@@ -63,7 +71,7 @@ void Widget::gameStart()
         i->hide();
     }
     player_snake = new snake;
-    player_snake->init(800, 600);
+    player_snake->init(pix->width(), pix->height());
     border.addRect(pix->rect());
     connect(player_snake, SIGNAL(hitBorder()), this, SLOT(gameOver()));
     connect(player_snake, SIGNAL(hitBody()), this, SLOT(gameOver()));

@@ -2,9 +2,14 @@
 #include <cmath>
 #define ANGLE angle *PI / 180
 
-snake::snake(QObject *parent)
-    : QObject{parent}
+snake::snake(QObject *parent) : QObject{parent}
 {
+    speed = 0;
+    angle = 0;
+    angleSpeed = 0;
+    length = 0;
+    width = 0;
+    height = 0;
     snake_style.setStyle(Qt::SolidLine);
     snake_style.setCapStyle(Qt::RoundCap);
     snake_style.setJoinStyle(Qt::RoundJoin);
@@ -60,16 +65,6 @@ void snake::setEndPosY(qreal y) //目前无用
     endPos.setY(y);
 }
 
-qreal snake::getSpeed() //目前无用
-{
-    return speed;
-}
-
-qreal snake::getAngleSpeed() //目前无用
-{
-    return angleSpeed;
-}
-
 void snake::rotate(int flag)
 {
     if (flag == LEFT)
@@ -80,11 +75,7 @@ void snake::rotate(int flag)
     {
         angle -= angleSpeed;
     }
-    if (angle >= 360)
-    {
-        angle = fmod(angle, 360);
-    }
-    else if (angle < 0)
+    if (angle >= 360 || angle < 0)
     {
         angle = fmod(angle, 360);
     }
@@ -112,13 +103,21 @@ QPainterPath *snake::getPath()
 {
     snake_path.clear();
     if (cos(ANGLE) > 0 && sin(ANGLE) > 0)
+    {
         head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE) - 5, 0.5, 0.5);
+    }
     else if (cos(ANGLE) < 0 && sin(ANGLE) > 0)
+    {
         head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE) - 5, 0.5, 0.5);
+    }
     else if (cos(ANGLE) < 0 && sin(ANGLE) < 0)
+    {
         head = QRectF(endPos.x() + 5 * cos(ANGLE) - 5, endPos.y() - 5 * sin(ANGLE), 0.5, 0.5);
+    }
     else if (cos(ANGLE) > 0 && sin(ANGLE) < 0)
+    {
         head = QRectF(endPos.x() + 5 * cos(ANGLE), endPos.y() - 5 * sin(ANGLE), 0.5, 0.5);
+    }
     QList<QPainterPath>::const_iterator i = snake_path_list.cbegin();
     for (; i != snake_path_list.cend(); i++)
     {
@@ -156,7 +155,9 @@ void snake::snakeMove()
     }
     //判断是否碰撞边界
     if (endPos.x() <= 15 || endPos.x() >= width - 15 || endPos.y() <= 15 || endPos.y() >= height - 15)
+    {
         emit hitBorder();
+    }
 }
 
 void snake::setColor(QColor a)

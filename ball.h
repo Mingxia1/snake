@@ -2,24 +2,24 @@
 #define BALL_H
 
 #include <QObject>
+#include <QPen>
 #include <QPointF>
 #include <QRandomGenerator>
-#include <QPen>
 
 class ball : public QObject
 {
     Q_OBJECT
-public:
+  public:
     explicit ball(qreal, qreal, QObject *parent = nullptr);
     QPen getStyle();
     QPointF getPos();
 
-private:
+  private:
     qreal r;
     QPointF pos;
     QPen ball_style;
 
-signals:
+  signals:
 };
 
 #endif // BALL_H

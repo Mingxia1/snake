@@ -1,12 +1,13 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include <QObject>
-#include <QPen>
-#include <QPainterPath>
 #include <QColor>
 #include <QColormap>
 #include <QImage>
+#include <QObject>
+#include <QPainterPath>
+#include <QPen>
+
 #define LEFT 1
 #define RIGHT 2
 #define PI 3.1416
@@ -16,7 +17,7 @@
 class snake : public QObject
 {
     Q_OBJECT
-public:
+  public:
     explicit snake(QObject *parent = nullptr);
     void init(double, double);
     QPen getStyle();
@@ -28,15 +29,13 @@ public:
     void setEndPosY(qreal);
     void setPath();
     void setColor(QColor);
-    qreal getSpeed();
-    qreal getAngleSpeed();
     qreal getRadAngel();
     QPainterPath *getPath();
     void rotate(int);
     void snakeMove();
     void eatBall();
 
-private:
+  private:
     QPen snake_style;
     QPointF startPos, endPos;
     qreal speed;
@@ -48,11 +47,11 @@ private:
     QRectF head;
     qreal width, height;
 
-public slots:
+  public slots:
     void rotateRight();
     void rotateLeft();
 
-signals:
+  signals:
     void hitBody();
     void hitBorder();
 };
