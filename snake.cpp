@@ -12,12 +12,12 @@ snake::snake(QObject *parent)
     snake_style.setColor(Qt::black);
 }
 
-void snake::init(double __width, double __height)
+void snake::init(double _width, double _height)
 {
-    width = __width;
-    height = __height;
-    startPos.setX(__width / 2);
-    startPos.setY(__height / 2);
+    width = _width;
+    height = _height;
+    startPos.setX(_width / 2);
+    startPos.setY(_height / 2);
     endPos = startPos;
     speed = 0.7;
     angle = 0;
@@ -123,7 +123,10 @@ QPainterPath *snake::getPath()
     for (; i != snake_path_list.cend(); i++)
     {
         if (i->intersects(head))
+        {
             emit hitBody();
+            return &snake_path;
+        }
         snake_path.addPath(*i);
     }
     return &snake_path;
@@ -151,6 +154,7 @@ void snake::snakeMove()
     {
         snake_path_list.removeFirst();
     }
+    //判断是否碰撞边界
     if (endPos.x() <= 15 || endPos.x() >= width - 15 || endPos.y() <= 15 || endPos.y() >= height - 15)
         emit hitBorder();
 }

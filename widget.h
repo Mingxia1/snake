@@ -1,18 +1,21 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include <QWidget>
-#include <QKeyEvent>
-#include <QTimer>
-#include <QPushButton>
-#include <QPainter>
-#include "snake.h"
 #include "ball.h"
+#include "snake.h"
+#include <QBitmap>
+#include <QFont>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QPainter>
+#include <QPushButton>
+#include <QTimer>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
-    class Widget;
+class Widget;
 }
 QT_END_NAMESPACE
 
@@ -20,32 +23,35 @@ class Widget : public QWidget
 {
     Q_OBJECT
 
-public:
-    Widget(QWidget *parent = nullptr);
-    ~Widget();
-    void keyPressEvent(QKeyEvent *);
-    void keyReleaseEvent(QKeyEvent *);
-    void drawBall(QPointF, QPen);
+  public:
+    explicit Widget(QWidget *parent = nullptr);
+    ~Widget() override;
+    void keyPressEvent(QKeyEvent *) override;
+    void keyReleaseEvent(QKeyEvent *) override;
+    void drawBall(QPointF, const QPen &);
     void drawSnake();
-    void paintEvent(QPaintEvent *);
-    void mainMenu();
+    void paintEvent(QPaintEvent *) override;
+    void updateScore();
 
-public slots:
+  public slots:
     void gameOver();
     void timerEvent();
     void gameStart();
+    void mainMenu();
 
-private:
+  private:
     Ui::Widget *ui;
     snake *player_snake;
-    QPixmap *pix;
+    QPixmap *pix, *top_banner, *menu_pix;
+    QLabel *game_over_menu, *main_menu;
     QTimer *rotate_right_timer;
     QTimer *rotate_left_timer;
     QTimer *main_timer;
     QList<ball *> *ball_list;
     QPainterPath border;
     QPen border_style;
-    QPushButton *game_start_button;
-    int ball_count;
+    QRect *score_box, *game_over_box;
+    QFont score_font, game_over_font;
+    int ball_count, score;
 };
 #endif // WIDGET_H
