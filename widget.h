@@ -50,7 +50,7 @@ class Widget : public QWidget
     QList<ball *> *ball_list;
     QPainterPath border;
     QPen border_style;
-    QRect *score_box, *game_over_box;
+    QRect *score_box, *game_over_box, *game_over_score_text_box, *game_over_score_box;
     QFont score_font, game_over_font;
     int ball_count, score;
 };

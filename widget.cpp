@@ -30,17 +30,17 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     main_menu->setGeometry(0, 0, 800, 650);
     main_menu->hide();
     auto *game_start_button = new QPushButton("开始", main_menu);
-    game_start_button->setGeometry(main_menu->width() / 2, main_menu->height() / 2, 100, 50);
+    game_start_button->setGeometry(main_menu->width() / 2 - 50, main_menu->height() / 2, 100, 50);
     connect(game_start_button, SIGNAL(clicked()), this, SLOT(gameStart()));
     //初始化游戏结束菜单label
     game_over_menu = new QLabel(this);
     game_over_menu->setGeometry(0, 0, 800, 650);
     game_over_menu->hide();
     auto *restart_button = new QPushButton("restart", game_over_menu);
-    restart_button->setGeometry(pix->width() / 2, pix->height() / 2, 100, 50);
+    restart_button->setGeometry(pix->width() / 2 - 50, pix->height() / 2, 100, 50);
     connect(restart_button, SIGNAL(clicked()), this, SLOT(gameStart()));
     auto *main_menu_button = new QPushButton("主菜单", game_over_menu);
-    main_menu_button->setGeometry(pix->width() / 2, pix->height() / 2 + 55, 100, 50);
+    main_menu_button->setGeometry(pix->width() / 2 - 50, pix->height() / 2 + 55, 100, 50);
     connect(main_menu_button, SIGNAL(clicked()), this, SLOT(mainMenu()));
     //其他初始化
     setFocusPolicy(Qt::StrongFocus);
@@ -48,6 +48,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     //初始化组件容器
     score_box = new QRect(375, 0, 50, 50);
     game_over_box = new QRect(200, 100, 400, 100);
+    game_over_score_text_box = new QRect(230, 200, 300, 100);
+    game_over_score_box = new QRect(500, 200, 100, 100);
     mainMenu();
 }
 
@@ -98,6 +100,9 @@ void Widget::gameOver()
     p->begin(menu_pix);
     p->setFont(game_over_font);
     p->drawText(*game_over_box, Qt::AlignCenter, "Game Over");
+    p->drawText(*game_over_score_text_box, Qt::AlignCenter, "Your Score:");
+    QString tempString = QString::number(score);
+    p->drawText(*game_over_score_box, Qt::AlignCenter, tempString);
     p->end();
     game_over_menu->setPixmap(*menu_pix);
     game_over_menu->show();
