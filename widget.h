@@ -4,6 +4,7 @@
 #include "ball.h"
 #include "snake.h"
 #include <QBitmap>
+#include <QComboBox>
 #include <QFont>
 #include <QKeyEvent>
 #include <QLabel>
@@ -32,18 +33,21 @@ class Widget : public QWidget
     void drawSnake();
     void paintEvent(QPaintEvent *) override;
     void updateScore();
+    inline void clearScreen();
 
   public slots:
     void gameOver();
     void timerEvent();
     void gameStart();
     void mainMenu();
+    void settingMenu();
 
   private:
     Ui::Widget *ui;
     snake *player_snake;
     QPixmap *pix, *top_banner, *menu_pix;
-    QLabel *game_over_menu, *main_menu;
+    QLabel *game_over_menu, *main_menu, *setting_menu;
+    QComboBox *difficulty_select;
     QTimer *rotate_right_timer;
     QTimer *rotate_left_timer;
     QTimer *main_timer;

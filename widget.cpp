@@ -29,9 +29,27 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     main_menu = new QLabel(this);
     main_menu->setGeometry(0, 0, 800, 650);
     main_menu->hide();
+    //初始化开始菜单按钮
     auto *game_start_button = new QPushButton("开始", main_menu);
     game_start_button->setGeometry(main_menu->width() / 2 - 50, main_menu->height() / 2, 100, 50);
     connect(game_start_button, SIGNAL(clicked()), this, SLOT(gameStart()));
+    auto *setting_button = new QPushButton("设置", main_menu);
+    setting_button->setGeometry(main_menu->width() / 2 - 50, main_menu->height() / 2 + 60, 100, 50);
+    connect(setting_button, SIGNAL(clicked()), this, SLOT(settingMenu()));
+    //初始化设置label
+    setting_menu = new QLabel(this);
+    setting_menu->setGeometry(0, 0, 800, 650);
+    setting_menu->hide();
+    //初始化设置菜单组件
+    difficulty_select = new QComboBox(setting_menu);
+    difficulty_select->addItem("easy");
+    difficulty_select->addItem("normal");
+    difficulty_select->addItem("hard");
+    difficulty_select->addItem("???");
+    difficulty_select->setGeometry(setting_menu->width() / 2 - 50, setting_menu->height(), 100, 50);
+    auto *setting_back_button = new QPushButton("返回", setting_menu);
+    setting_back_button->setGeometry(setting_menu->width() / 2 - 50, setting_menu->height() / 2 + 60, 100, 50);
+    connect(setting_back_button, SIGNAL(clicked()), this, SLOT(mainMenu()));
     //初始化游戏结束菜单label
     game_over_menu = new QLabel(this);
     game_over_menu->setGeometry(0, 0, 800, 650);
@@ -53,25 +71,34 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
     mainMenu();
 }
 
+inline void Widget::clearScreen()
+{
+    QList<QLabel *> list = this->findChildren<QLabel *>();
+    foreach (auto i, list)
+    {
+        i->hide();
+    }
+}
+
 void Widget::mainMenu()
 {
     menu_pix->fill();
     main_menu->setPixmap(*menu_pix);
-    QList<QLabel *> list = this->findChildren<QLabel *>();
-    foreach (auto i, list)
-    {
-        i->hide();
-    }
+    clearScreen();
     main_menu->show();
+}
+
+void Widget::settingMenu()
+{
+    menu_pix->fill();
+    setting_menu->setPixmap(*menu_pix);
+    clearScreen();
+    setting_menu->show();
 }
 
 void Widget::gameStart()
 {
-    QList<QLabel *> list = this->findChildren<QLabel *>();
-    foreach (auto i, list)
-    {
-        i->hide();
-    }
+    clearScreen();
     player_snake = new snake;
     player_snake->init(pix->width(), pix->height());
     border.addRect(pix->rect());
